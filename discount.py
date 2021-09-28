@@ -27,7 +27,6 @@ class Playstation():
             item = []
             item.append(game['name'])
             item.append(game['price']['basePrice'])
-            item.append(game['price']['discountText'])
             item.append(game['price']['discountedPrice'])
             item.append(game['media'][-1]['url'])
 
@@ -55,13 +54,13 @@ class NintendoSwitch():
             item = []
             item.append(names[i])
             item.append(full_prices[i])
-            item.append((full_prices[i] - dis_prices[i]) / full_prices[i])
             item.append(dis_prices[i])
             item.append(images[i])
 
             out.append(item)
 
         return out
+
 
 class HtmlWriter():
 
@@ -71,38 +70,45 @@ class HtmlWriter():
 
     def preamble(self):
         doc = [
+                '<!DOCTYPE html>',
+                '<meta charset="UTF-8">',
                 '<html>',
                 '<head>',
                 '<title>Game Discounts</title>',
                 '</head>',
                 '<body>',
-                '<table>',
-                '<tr>',
-                '<th>Game</th>',
-                '<th>Price</th>',
-                '<th>Picture</th>',
-                '</tr>',
                 ]
         return doc
 
     def content(self):
         doc = []
-        for game in self.p.get_name_price_pic() + self.n.get_name_price_pic():
+        sources = {
+                'Playstation': self.p.get_name_price_pic(),
+                'Nintendo': self.n.get_name_price_pic(),
+                }
+        for source in sources:
+            doc.append('<table>')
+
             doc.append('<tr>')
-            doc.append('<td>{}</td>'.format(game[0]))
-            doc.append('<td>{}</td>'.format(game[3]))
-            doc.append('<td>')
-            doc.append('<picture>')
-            doc.append('<img src="{}" alt="{}" style="width:5cm;">'.format(game[4], game[0]))
-            doc.append('</picture>')
-            doc.append('</td>')
-            doc.append('</tr>')
+            doc.append('<th>{}</th>'.format(source))
+            doc.append('<tr>')
+
+            for game in sources[source]:
+                doc.append('<tr>')
+                doc.append('<td>{}</td>'.format(game[0]))
+                doc.append('<td><s>{}</s>  {}</td>'.format(game[1], game[2]))
+                doc.append('<td>')
+                doc.append('<picture>')
+                doc.append('<img src="{}" alt="{}" style="width:5cm;">'.format(game[3], game[0]))
+                doc.append('</picture>')
+                doc.append('</td>')
+                doc.append('</tr>')
+
+            doc.append('</table>')
         return doc
 
     def ending(self):
         doc = [
-                '</tr>',
-                '</table>',
                 '</body>',
                 '</html>',
                 ]
