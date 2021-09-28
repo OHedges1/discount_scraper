@@ -1,10 +1,10 @@
-FROM debian
+FROM alpine
 
 WORKDIR /usr/src/app
 
 COPY . .
 
-RUN apt-get -y update && apt-get -y upgrade && apt install -y python3-pip
+RUN apk update && apk add python3 && apk add py3-pip
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 EXPOSE 8080
