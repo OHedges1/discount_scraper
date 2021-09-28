@@ -1,1 +1,1 @@
-Datascraper that collects the best selling video games from the playstation, nintendo, and steam stores.
+Datascraper that collects the best selling discounted video games from the Playstation, Nintendo, and Steam stores.
