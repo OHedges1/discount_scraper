@@ -63,12 +63,53 @@ class NintendoSwitch():
 
         return out
 
-
-class Latex():
+class HtmlWriter():
 
     def __init__(self):
-        with open('main.tex', 'w') as f:
-            print('This will be written to somedir/spamspam.txt', file=f)
+        self.p = Playstation(12)
+        self.n = NintendoSwitch()
+
+    def preamble(self):
+        doc = [
+                '<html>',
+                '<head>',
+                '<title>Game Discounts</title>',
+                '</head>',
+                '<body>',
+                '<table>',
+                '<tr>',
+                '<th>Game</th>',
+                '<th>Price</th>',
+                '<th>Picture</th>',
+                '</tr>',
+                ]
+        return doc
+
+    def content(self):
+        doc = []
+        for game in self.p.get_name_price_pic() + self.n.get_name_price_pic():
+            doc.append('<tr>')
+            doc.append('<td>{}</td>'.format(game[0]))
+            doc.append('<td>{}</td>'.format(game[3]))
+            doc.append('<td>')
+            doc.append('<picture>')
+            doc.append('<img src="{}" alt="{}" style="width:5cm;">'.format(game[4], game[0]))
+            doc.append('</picture>')
+            doc.append('</td>')
+            doc.append('</tr>')
+        return doc
+
+    def ending(self):
+        doc = [
+                '</tr>',
+                '</table>',
+                '</body>',
+                '</html>',
+                ]
+        return doc
 
 
-l = Latex()
+h = HtmlWriter()
+with open('index.html', 'w') as f:
+    for item in h.preamble() + h.content() + h.ending():
+        f.write(item + '\n')
