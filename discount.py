@@ -62,11 +62,29 @@ class NintendoSwitch():
         return out
 
 
+class Steampowered():
+
+    def __init__(self):
+        url = 'https://store.steampowered.com/specials#tab=TopSellers'
+        re = requests.get(url)
+        soup = BeautifulSoup(re.text, 'html.parser')
+        self.refined_soup = soup.find('div', id='TopSellersRows')
+
+    def get_name_price_pic(self):
+        names = [i.text for i in self.refined_soup.find_all('div', class_='tab_item_name')]
+        full_prices = [i.text for i in self.refined_soup.find_all('div', class_='discount_original_price')]
+        dis_prices = [i.text for i in self.refined_soup.find_all('div', class_='discount_final_price')]
+        images = [i.get('src') for i in self.refined_soup.find_all('img', class_='tab_item_cap_img')]
+
+        return zip(names, full_prices, dis_prices, images)
+
+
 class HtmlWriter():
 
     def __init__(self):
         self.p = Playstation(12)
         self.n = NintendoSwitch()
+        self.s = Steampowered()
 
     def preamble(self):
         doc = [
@@ -85,6 +103,7 @@ class HtmlWriter():
         sources = {
                 'Playstation': self.p.get_name_price_pic(),
                 'Nintendo': self.n.get_name_price_pic(),
+                'Steampowered': self.s.get_name_price_pic(),
                 }
         for source in sources:
             doc.append('<table>')
