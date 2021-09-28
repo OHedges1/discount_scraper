@@ -49,17 +49,7 @@ class NintendoSwitch():
         dis_prices = [float(i) for i in all_prices[::2]]
         images = [i.get('src') for i in self.soup.find_all(class_='tile-image img img-fluid')]
 
-        out = []
-        for i in range(len(names)):
-            item = []
-            item.append(names[i])
-            item.append(full_prices[i])
-            item.append(dis_prices[i])
-            item.append(images[i])
-
-            out.append(item)
-
-        return out
+        return zip(names, full_prices, dis_prices, images)
 
 
 class Steampowered():
